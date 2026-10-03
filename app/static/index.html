@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f8f3" />
+    <meta name="description" content="Simulation-only childcare environment safety dashboard." />
+    <title>Care Monitor — Simulation Studio</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Care Monitor home">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 27V14m0 7c-7 0-11-4-11-11 7 0 11 4 11 11Zm0-5c0-6 4-10 11-10 0 7-4 11-11 11"/><path d="M16 27c-3-3-5-6-5-9"/></svg></span>
+          <span class="brand-copy"><strong>care<span>monitor</span></strong><small>SIMULATION STUDIO</small></span>
+        </a>
+        <div class="nav-label">WORKSPACE</div>
+        <nav>
+          <a class="nav-item active" href="#dashboard" aria-current="page"><span class="nav-icon">◫</span> Overview</a>
+          <a class="nav-item" href="#room-map"><span class="nav-icon">⌗</span> Room simulator</a>
+          <a class="nav-item" href="#activity"><span class="nav-icon">◷</span> Event log</a>
+        </nav>
+        <div class="sidebar-foot">
+          <div class="privacy-card"><span class="privacy-icon">⌂</span><div><strong>Runs locally</strong><p>No video or personal data is used.</p></div></div>
+          <div class="sidebar-version">CARE MONITOR <span>v0.1.0</span></div>
+        </div>
+      </aside>
+
+      <main id="dashboard" class="main-content">
+        <header class="topbar">
+          <div class="crumbs"><span>Workspace</span><span class="crumb-slash">/</span><strong>Overview</strong></div>
+          <div class="topbar-right"><span class="local-pill"><span class="local-dot"></span> LOCAL ONLY</span><button class="avatar" aria-label="Demo profile">D</button></div>
+        </header>
+
+        <div class="page-wrap">
+          <section class="welcome-row">
+            <div><div class="eyebrow"><span class="eyebrow-line"></span> YOUR PRIVATE SIMULATION SPACE</div><h1>A little more peace<br class="mobile-break" /> of mind.</h1><p class="welcome-copy">Explore how virtual safety zones behave using a simple, made-up room map.</p></div>
+            <div class="api-status" id="api-status" role="status"><span class="status-orb loading"></span><span><strong>Checking local API</strong><small>Connection status</small></span></div>
+          </section>
+
+          <section class="notice" aria-label="Important simulation notice">
+            <span class="notice-symbol" aria-hidden="true">i</span>
+            <p><strong>Simulation only.</strong> This demo does not watch a room, detect a child, measure real distances, or send alerts. It is not a safety device or a substitute for caregiver supervision.</p>
+            <span class="notice-tag">DEMO MODE</span>
+          </section>
+
+          <section class="workspace-grid" id="room-map">
+            <article class="panel map-panel">
+              <div class="panel-heading">
+                <div><div class="section-kicker">INTERACTIVE WORKSPACE</div><h2>Room map</h2><p class="panel-subtitle">Draw an abstract zone, then test a fabricated point.</p></div>
+                <button class="icon-button" id="reset-map" title="Clear map draft" aria-label="Clear map draft">↺</button>
+              </div>
+              <div class="map-toolbar"><div class="mode-switch" role="group" aria-label="Map interaction mode"><button id="zone-mode" class="mode-button selected" aria-pressed="true"><span class="mode-dot zone-dot"></span> Draw a zone</button><button id="subject-mode" class="mode-button" aria-pressed="false"><span class="mode-dot subject-dot"></span> Place a test point</button></div><span class="coord-note">ABSTRACT UNITS · NOT METERS</span></div>
+              <div class="map-frame">
+                <div class="map-corner map-corner-tl">SIMULATED ROOM <span>01</span></div>
+                <div class="map-corner map-corner-tr">TOP-DOWN VIEW</div>
+                <svg id="room-svg" class="room-svg" viewBox="0 0 100 100" role="img" aria-label="Interactive abstract room map. Choose Draw a zone and click at least three points, or choose Place a test point.">
+                  <defs><pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M 5 0 L 0 0 0 5" fill="none" stroke="#e7ece4" stroke-width=".18"/></pattern><pattern id="small-grid" width="1" height="1" patternUnits="userSpaceOnUse"><path d="M 1 0 L 0 0 0 1" fill="none" stroke="#f0f2ed" stroke-width=".12"/></pattern></defs>
+                  <rect x="0" y="0" width="100" height="100" fill="url(#small-grid)"/><rect x="0" y="0" width="100" height="100" fill="url(#grid)"/>
+                  <path id="saved-zone" class="saved-zone" d=""/><path id="draft-zone" class="draft-zone" d=""/>
+                  <g id="draft-points"></g><g id="test-marker" class="test-marker" aria-hidden="true"></g>
+                  <g class="map-axis" aria-hidden="true"><path d="M 7 93 V 83 M 7 93 H 17"/><path d="m7 82-1 2h2zM18 93l-2-1v2z"/><text x="20" y="95">x</text><text x="5" y="80">y</text></g>
+                  <rect class="map-click-layer" x="0" y="0" width="100" height="100" fill="transparent"/>
+                </svg>
+                <div class="map-legend"><span><i class="legend-zone"></i> Risk zone</span><span><i class="legend-point"></i> Test point</span></div>
+              </div>
+              <div class="map-instructions"><span class="instruction-icon">✳</span><p id="map-hint">Click the map to add zone corners. Use at least three points.</p><span id="vertex-count" class="vertex-count">0 / 3</span></div>
+            </article>
+
+            <aside class="right-column">
+              <article class="panel setup-panel">
+                <div class="section-kicker">SET UP A SCENARIO</div><h2>Try a zone rule</h2><p class="panel-subtitle">A quick, local-only walkthrough.</p>
+                <div class="step-list">
+                  <div class="setup-step"><div class="step-number done">1</div><div class="step-copy"><strong>Name your zone</strong><label class="sr-only" for="zone-name">Zone name</label><input id="zone-name" maxlength="80" value="play-area" autocomplete="off" /></div></div>
+                  <div class="setup-step"><div class="step-number" id="step-two">2</div><div class="step-copy"><strong>Draw its boundary</strong><span>Click 3 or more corners on the map.</span></div></div>
+                  <div class="setup-step"><div class="step-number" id="step-three">3</div><div class="step-copy"><strong>Place a test point</strong><span>We’ll check the point against your zone.</span></div></div>
+                </div>
+                <button id="save-zone" class="button button-primary" disabled><span>Save simulated zone</span><span aria-hidden="true">↗</span></button>
+                <button id="evaluate-point" class="button button-secondary" disabled><span>Evaluate test point</span><span aria-hidden="true">→</span></button>
+                <p class="form-feedback" id="feedback" role="status" aria-live="polite"></p>
+              </article>
+
+              <article class="result-card" id="result-card" aria-live="polite">
+                <div class="result-top"><span class="result-icon" id="result-icon">✦</span><span class="result-label">LATEST SIMULATION</span><span id="result-indicator" class="result-indicator neutral"></span></div>
+                <h3 id="result-title">Ready when you are</h3><p id="result-copy">Your simulation results will appear here. Nothing is monitoring a real space.</p>
+                <div class="result-meta"><span id="result-zone">NO ZONE SAVED</span><span id="result-state">WAITING</span></div>
+              </article>
+            </aside>
+          </section>
+
+          <section class="activity-section" id="activity">
+            <div class="activity-heading"><div><div class="section-kicker">SESSION SUMMARY</div><h2>Recent activity</h2></div><span class="session-badge"><span></span> THIS SESSION ONLY</span></div>
+            <div class="activity-table"><div class="activity-header"><span>EVENT</span><span>ZONE</span><span>OUTCOME</span><span>TIME</span></div><div id="activity-list" class="activity-list"><div class="empty-state"><span class="empty-icon">⌁</span><p>No simulated events yet</p><small>Run a test point to see an event here.</small></div></div></div>
+          </section>
+          <footer class="page-footer"><span>Care Monitor · Simulation Studio</span><span>For demonstration only · Not a safety system</span></footer>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

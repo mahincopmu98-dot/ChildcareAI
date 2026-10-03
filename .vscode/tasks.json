@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Care Monitor Simulator API",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"-m",
+				"uvicorn",
+				"app.main:app",
+				"--reload"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
